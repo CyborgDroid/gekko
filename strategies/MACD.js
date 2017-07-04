@@ -1,5 +1,5 @@
 /*
-  
+
   MACD - DJM 31/12/2013
 
   (updated a couple of times since, check git history)
@@ -41,6 +41,7 @@ method.init = function() {
 
 // what happens on every new candle?
 method.update = function(candle) {
+  log.debug('new candle received!');
   // nothing!
 }
 
@@ -53,12 +54,12 @@ method.log = function() {
   var diff = macd.diff;
   var signal = macd.signal.result;
 
-  log.debug('calculated MACD properties for candle:');
-  log.debug('\t', 'short:', macd.short.result.toFixed(digits));
-  log.debug('\t', 'long:', macd.long.result.toFixed(digits));
-  log.debug('\t', 'macd:', diff.toFixed(digits));
-  log.debug('\t', 'signal:', signal.toFixed(digits));
-  log.debug('\t', 'macdiff:', macd.result.toFixed(digits));
+  // log.debug('calculated MACD properties for candle:');
+  // log.debug('\t', 'short:', macd.short.result.toFixed(digits));
+  // log.debug('\t', 'long:', macd.long.result.toFixed(digits));
+  // log.debug('\t', 'macd:', diff.toFixed(digits));
+  // log.debug('\t', 'signal:', signal.toFixed(digits));
+  // log.debug('\t', 'macdiff:', macd.result.toFixed(digits));
 }
 
 method.check = function() {
@@ -85,9 +86,11 @@ method.check = function() {
 
     if(this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
+      log.debug('Sending advice LONG');
       this.advice('long');
-    } else
+    } else {
       this.advice();
+    }
 
   } else if(macddiff < settings.thresholds.down) {
 
@@ -110,6 +113,7 @@ method.check = function() {
 
     if(this.trend.persisted && !this.trend.adviced) {
       this.trend.adviced = true;
+      log.debug('Sending advice SHORT');
       this.advice('short');
     } else
       this.advice();
@@ -120,9 +124,9 @@ method.check = function() {
 
     // we're not in an up nor in a downtrend
     // but for now we ignore sideways trends
-    // 
+    //
     // read more @link:
-    // 
+    //
     // https://github.com/askmike/gekko/issues/171
 
     // this.trend = {
